@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<UsingTask TaskName="Injectors.Task.InjectorTask" AssemblyFile="Injectors.Task.dll"/>
+	<Target Name="Build">
+		<Exec Command="copy &quot;$(MSBuildProjectDirectory)\Assets\Binaries\ICSharpCode.NRefactory.dll&quot; &quot;$(MSBuildProjectDirectory)\ICSharpCode.NRefactory.dll&quot; /B /Y" />
+		<Exec Command="copy &quot;$(MSBuildProjectDirectory)\Injectors.Core.Attributes.Generic\Injectors.Core.Attributes.Generic.dll&quot; &quot;$(MSBuildProjectDirectory)\Injectors.Core.Attributes.Generic.dll&quot; /B /Y" />
+		<Exec Command="xcopy &quot;$(MSBuildProjectDirectory)\packages\Mono.Cecil.0.9.5.0\lib\net40\*.dll&quot; &quot;$(MSBuildProjectDirectory)\*.dll&quot; /Y /C" />
+		<Exec Command="xcopy &quot;$(MSBuildProjectDirectory)\packages\Spackle.5.0.0.0\lib\.NetFramework 4.0\*.dll&quot; &quot;$(MSBuildProjectDirectory)\*.dll&quot; /Y /C" />
+		<MSBuild Projects="Injectors.Core\Injectors.Core.csproj" Properties="SolutionDir=$(MSBuildProjectDirectory)\">
+			<Output TaskParameter="TargetOutputs" ItemName="BuildOutput" />
+		</MSBuild>
+		<MSBuild Projects="Injectors.Task\Injectors.Task.csproj" Properties="SolutionDir=$(MSBuildProjectDirectory)\">
+			<Output TaskParameter="TargetOutputs" ItemName="BuildOutput" />
+		</MSBuild>
+		<MSBuild Projects="Injectors.SampleTarget\Injectors.SampleTarget.csproj" Properties="SolutionDir=$(MSBuildProjectDirectory)\">
+			<Output TaskParameter="TargetOutputs" ItemName="BuildOutput" />
+		</MSBuild>
+		<InjectorTask AssemblyLocation="Injectors.SampleTarget.exe" />
+	</Target>
+</Project>
